@@ -1,0 +1,97 @@
+@import "normalize.css";
+
+:root {
+  font-size: 10px;
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  // box-sizing: border-box;
+}
+
+*,
+*::after,
+*::before {
+  // box-sizing: inherit;
+  box-sizing: border-box;
+}
+
+@mixin center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin cardSetting($nth) {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  @if $nth == 1 {
+    width: 120rem;
+    min-width: 120rem; // 设定flexbox后，页面缩小但card不变形
+    aspect-ratio: 16 / 9;
+    box-shadow: 0 0 1rem #bebebe;
+  } @else {
+    position: absolute;
+    width: 20rem;
+    border-radius: 1rem;
+    aspect-ratio: 2/3;
+    box-shadow: 0 30px 50px #505050;
+    left: calc(
+      50% + ($nth - 2) * 22rem
+    ); // 小card距离cardGroup宽度一半，后面的小card依次再距离22rem(小card宽度+gap2rem)
+  }
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  @include center;
+}
+
+.cardGroup {
+  @include center;
+  position: relative;
+
+  $cardArray: (2, 3, 4);
+
+  .card {
+    transition: 500ms;
+    &:nth-child(1) {
+      transition: none;
+      @include cardSetting(1);
+    }
+    @each $i in $cardArray {
+      &:nth-child(#{$i}) {
+        @include cardSetting(#{$i});
+      }
+    }
+    &:nth-child(n + 5) {
+      @include cardSetting(5);
+      left: calc(50% + 3 * 22rem); // 将第五张之后的图片都放在这个位置
+      opacity: 0; // 存在但看不见
+    }
+  }
+}
+
+.buttonGroup {
+  @include center;
+  position: absolute;
+  bottom: 5rem;
+  gap: 2rem;
+
+  .button {
+    @include center;
+    width: 4rem;
+    background-color: #6e9bbb;
+    aspect-ratio: 1 /1;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px #505050;
+    cursor: pointer;
+    &:active {
+      box-shadow: none;
+    }
+  }
+}
